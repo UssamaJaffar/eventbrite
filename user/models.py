@@ -41,13 +41,9 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
-    GENDER_CHOICES = (
-        ('Male', 'Male'),
-        ('Female', 'Female'),
-        ('Other', 'Other'),
-    )
-
     email = models.EmailField(_("email address"), unique=True)
+    organization_id = models.IntegerField()
+    user_id = models.IntegerField()
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
@@ -55,8 +51,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_blocked = models.BooleanField(default=False)
 
     fullname = models.CharField(max_length=250, default='')
-    gender = models.CharField(choices=GENDER_CHOICES, max_length=20, default='Male') 
-    phone_number = models.CharField(max_length=22, default='')
     created_at = models.DateTimeField(auto_now_add=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
