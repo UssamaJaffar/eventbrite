@@ -37,6 +37,7 @@ class VenueView(viewsets.ModelViewSet):
                 data['Venue_id'] = res['id']
                 data['User_id'] = request.user.id
                 data['address'] = res['address']['address_1']
+                data['name'] = res['name']
 
                 serializer = self.serializer_class(data=data)
                 serializer.is_valid(raise_exception=True)
@@ -81,7 +82,13 @@ class EventView(viewsets.ModelViewSet):
 
                     if response.status_code == 200: 
                         res['ticket'] = response.json()
-                        return Response({"response":res}, status=status.HTTP_200_OK)        
+                        response = requests.get(f'https://www.eventbriteapi.com/v3/venues/{qs.Venue_id.Venue_id}/', headers={"Content-Type":"application/json" , "Authorization": f"Bearer {EVENTBRITE_TOKEN}"})
+                        if response.status_code == 200: 
+                            res['venue'] = response.json()
+                            
+                            return Response({"response":res}, status=status.HTTP_200_OK)        
+                        else:
+                            return Response({"response":response.json()}, status=status.HTTP_400_BAD_REQUEST)        
                     else:
                         return Response({"response":response.json()}, status=status.HTTP_400_BAD_REQUEST)
 

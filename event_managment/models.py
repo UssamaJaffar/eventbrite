@@ -4,6 +4,7 @@ from user.models import User
 # Create your models here.
 
 class Venue(models.Model):
+    name = models.CharField(max_length=1000,default='')
     Venue_id = models.IntegerField()
     User_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
     is_deleted = models.BooleanField(default=False)
